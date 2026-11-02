@@ -139,7 +139,7 @@ class CryptoDataHandler:
                 df = prices_df.join(volumes_df, how='left')
                 
                 # Interpolate missing volume values
-                df['volume'] = df['volume'].interpolate(method='linear').fillna(method='bfill').fillna(method='ffill')
+                df['volume'] = df['volume'].interpolate(method='linear').bfill().ffill()
             else:
                 df = prices_df
                 df['volume'] = df['price'] * 1000  # Estimate volume if not available
@@ -166,7 +166,7 @@ class CryptoDataHandler:
             df = df.drop('price', axis=1)
             
             # Fill any remaining NaN values
-            df = df.fillna(method='bfill').fillna(method='ffill')
+            df = df.bfill().ffill()
 
             # Add technical indicators
             df = self._add_technical_indicators(df)
@@ -174,7 +174,7 @@ class CryptoDataHandler:
             # Validate data quality
             if df.isnull().any().any():
                 logger.warning("Data contains NaN values after processing")
-                df = df.fillna(method='ffill').fillna(method='bfill')
+                df = df.ffill().bfill()
 
             logger.info(f"Successfully processed {len(df)} rows for {crypto_id}")
             return df
@@ -239,7 +239,7 @@ class CryptoDataHandler:
         df['volume'] = base_volume * volume_multiplier * rng.uniform(0.5, 1.5, size=n)
 
         # Clean up any NaN values
-        df = df.fillna(method='bfill').fillna(method='ffill')
+        df = df.bfill().ffill()
 
         # Add technical indicators
         df = self._add_technical_indicators(df)
@@ -286,7 +286,7 @@ class CryptoDataHandler:
             df['volatility'] = df['returns'].rolling(window=20, min_periods=1).std().fillna(0)
 
             # Final cleanup
-            df = df.fillna(method='ffill').fillna(method='bfill').fillna(0)
+            df = df.ffill().bfill().fillna(0)
 
             logger.debug("Successfully added technical indicators")
             return df

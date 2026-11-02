@@ -230,7 +230,7 @@ def main():
             hovermode='x unified'
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         
     except Exception as e:
         st.error(f"❌ Error creating price chart: {e}")
@@ -351,7 +351,7 @@ def main():
                     )
                 )
                 
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
                 
             except Exception as e:
                 st.error(f"❌ Error creating prediction chart: {e}")
